@@ -4,3 +4,4 @@ yfinance
 python-telegram-bot
 openpyxl
 XlsxWriter
+lxml

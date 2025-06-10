@@ -4,11 +4,11 @@ A Telegram bot that fetches data for various financial tickers and generates Exc
 
 ## Configuration
 
-Before running the bot, provide your Telegram bot token and the administrator chat ID in `config.py`:
+Before running the bot, copy `config_template.py` to `config.py` and fill in your Telegram bot token and administrator chat ID:
 
-```python
-TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
-ADMIN_CHAT_ID = 123456789
+```bash
+cp config_template.py config.py
+# then edit config.py and set TOKEN and ADMIN_CHAT_ID
 ```
 
 The bot uses a `data` directory in the project root to store downloaded Excel files and logs. It will be created automatically if not present.
@@ -30,7 +30,7 @@ Use `/load` in your Telegram bot chat to start interacting with the bot.
 - `gcurves_hist.py` – retrieves yield curve history from MOEX
 - `ofz_2.py` – extracts 2‑year bond yields from `gcurves_hist.xlsx`
 - `ofz_10.py` – extracts 10‑year bond yields from `gcurves_hist.xlsx`
-- `config.py` – contains `TOKEN` and `ADMIN_CHAT_ID`
+- `config_template.py` – template with `TOKEN` and `ADMIN_CHAT_ID`
 
 ## Logs
 
