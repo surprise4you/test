@@ -292,7 +292,9 @@ def get_last_day_of_prev_quarter(today):
 def build_summary_table():
     records = []
     today = datetime.date.today()
-    week_ago = today - datetime.timedelta(days=7)
+    # Откатываемся на пять рабочих дней назад, чтобы корректно сравнивать с
+    # предыдущей неделей вне зависимости от выходных
+    week_ago = (pd.Timestamp(today) - pd.tseries.offsets.BDay(5)).date()
     last_q_date = get_last_day_of_prev_quarter(today)
     year_start = datetime.date(today.year, 1, 1)
 
@@ -353,7 +355,7 @@ def build_summary_table():
 
             prev_week, prev_week_date = find_prev_value(df, col_date, col_price, week_ago)
             qtd_value, qtd_date = find_first_after(df, col_date, col_price, last_q_date)
-            ytd_value, ytd_date = df.iloc[0][col_price], df.iloc[0][col_date]
+            ytd_value, ytd_date = find_first_after(df, col_date, col_price, year_start)
 
             def delta(val1, val2):
                 if val1 is None or val2 is None or val2 == 0 or pd.isnull(val1) or pd.isnull(val2):
@@ -452,29 +454,6 @@ async def handle_ticker_press(update: Update, context: ContextTypes.DEFAULT_TYPE
     start_cbr = "29.12.2024"
     end_cbr = datetime.date.today().strftime("%d.%m.%Y")
     start_moex_currency = "2024-12-30"
-
-    def ensure_custom_file(code):
-        # Создаёт файл (если надо), возвращает путь к нему
-        if code == "gcurves_hist":
-            path = update_gcurve_file()
-            if not (path and os.path.exists(path)):
-                raise Exception(f"Файл {path} не создан/не найден.")
-            return path
-        elif code == "ofz_2":
-            update_gcurve_file()
-            path = update_ofz2_file()
-            if not (path and os.path.exists(path)):
-                raise Exception(f"Файл {path} не создан/не найден.")
-            return path
-        elif code == "ofz_10":
-            update_gcurve_file()  # обязательно обновить основную!
-            path = update_ofz10_file()
-            if not (path and os.path.exists(path)):
-                raise Exception(f"Файл {path} не создан/не найден.")
-            return path
-        else:
-            raise Exception(f"Неизвестный custom-тикер: {code}")
-
     if query.data == "load_all_zip":
         msg = await query.edit_message_text("⏳ Формирую архив со всеми таблицами, подождите...")
         await context.bot.send_chat_action(chat_id=query.message.chat.id, action=ChatAction.TYPING)
