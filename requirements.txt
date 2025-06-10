@@ -1,0 +1,6 @@
+requests
+pandas
+yfinance
+python-telegram-bot
+openpyxl
+XlsxWriter

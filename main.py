@@ -18,10 +18,7 @@ import logging
 from gcurves_hist import update_gcurve_file
 from ofz_2 import update_ofz2_file
 from ofz_10 import update_ofz10_file
-
-
-TOKEN = ""
-ADMIN_CHAT_ID = 123
+from config import TOKEN, ADMIN_CHAT_ID
 
 
 LOG_FILE = os.path.join("imoex.log")
